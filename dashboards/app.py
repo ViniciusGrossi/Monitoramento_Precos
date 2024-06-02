@@ -13,6 +13,23 @@ df = pd.read_sql_query("SELECT * FROM mercadolivre_items", conn)
 # Fechar a conexão com o banco de dados
 conn.close()
 
+# Sidebar com filtros
+st.sidebar.header('Filtros')
+
+# Filtro por Faixa de Preço
+min_price, max_price = st.sidebar.slider('Selecione a faixa de preço', float(df['new_price'].min()), float(df['new_price'].max()), (float(df['new_price'].min()), float(df['new_price'].max())))
+df = df[(df['new_price'] >= min_price) & (df['new_price'] <= max_price)]
+
+#Filtro por Marca
+show_brands_filter = st.sidebar.checkbox('Filtrar por Marcas')
+if show_brands_filter:
+    selected_brands = st.sidebar.multiselect('Selecione as marcas', df['brand'].unique(),['OLYMPIKUS','FILA', 'MIZUNO','NEW BALANCE','ASICS'])
+    df = df[df['brand'].isin(selected_brands)]
+
+# Filtro por Avaliação
+min_rating, max_rating = st.sidebar.slider('Selecione a faixa de avaliações', float(df['reviews_rating_number'].min() > 0), float(df['reviews_rating_number'].max()), (float(df['reviews_rating_number'].min()), float(df['reviews_rating_number'].max())))
+df = df[(df['reviews_rating_number'] >= min_rating) & (df['reviews_rating_number'] <= max_rating)]
+
 st.title('Pesquisa de Mercado - Tênis Esportivos no Mercado Livre')
 
 # Melhorar o layout com colunas para KPIs
