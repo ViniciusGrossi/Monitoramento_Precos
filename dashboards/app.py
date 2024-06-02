@@ -68,10 +68,10 @@ with tab1:
     col1.plotly_chart(fig)
 
     st.subheader('Boxplot de Preços')
-    col1, col2 = st.columns([8, 2])
+    col1, col2 = st.columns([4, 2])
     fig = px.box(df['price'].dropna(), labels={'value':'Preço (R$)'}, title='Boxplot de Preços')
-    st.plotly_chart(fig)
-    st.write(df['price'].describe())
+    col1.plotly_chart(fig)
+    col2.write(df['price'].describe())
 
     # Correlação entre Preço e Avaliações
     st.subheader('Correlação entre Preço e Avaliações')
@@ -122,11 +122,14 @@ with tab3:
     fig = px.histogram(df['reviews_rating_number'].dropna(), nbins=30, labels={'value':'Número de Avaliações'}, title='Histograma de Avaliações')
     st.plotly_chart(fig)
 
-    fig = px.box(df['reviews_rating_number'].dropna(), labels={'value':'Número de Avaliações'}, title='Boxplot de Avaliações')
-    st.plotly_chart(fig)
-    st.write(df['reviews_rating_number'].describe())
+    st.subheader('Boxplot de Avaliações')
+    col1, col2 = st.columns([4, 2])
+    fig = px.box(df['reviews_rating_number'].dropna(), labels={'value':'Número de Avaliações'})
+    col1.plotly_chart(fig)
+    col2.write(df['reviews_rating_number'].describe())
 
     # Identificação de Outliers
-    fig = px.box(df, x='reviews_rating_number', points='all', labels={'x':'Número de Avaliações'}, title='Outliers nas Avaliações')
+    st.subheader('Outliers de Avaliações')
+    fig = px.box(df, x='reviews_rating_number', points='all', labels={'x':'Número de Avaliações'})
     st.plotly_chart(fig)
    
