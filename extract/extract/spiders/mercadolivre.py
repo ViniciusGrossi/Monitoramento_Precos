@@ -4,7 +4,7 @@ class MercadoLivreSpider(scrapy.Spider):
     name = 'mercadolivre'
     start_urls = ['https://lista.mercadolivre.com.br/tenis-corrida-masculino']
     page_count = 1
-    max_pages = 10
+    max_pages = 50
 
     def parse(self, response):
         products = response.css('div.ui-search-result__content')
