@@ -20,7 +20,7 @@ def filtrar_avaliacoes_zeradas(df):
 st.sidebar.header('Vinicius Grossi')
 st.sidebar.header('Filtros')
 
-incluir_zeradas = st.sidebar.checkbox('Incluir avaliações zeradas', value=False)
+incluir_zeradas = st.sidebar.checkbox('Incluir avaliações zeradas', value=True)
 if not incluir_zeradas:
     df = filtrar_avaliacoes_zeradas(df)
 # Filtro por Faixa de Preço
