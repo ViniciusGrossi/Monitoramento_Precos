@@ -9,9 +9,9 @@ conn = sqlite3.connect('data/quotes.db')
 
 # Carregar os dados da tabela 'mercadolivre_items' em um DataFrame pandas
 df = pd.read_sql_query("SELECT * FROM mercadolivre_items", conn)
-
-# Fechar a conexão com o banco de dados
 conn.close()
+
+st.set_page_config(page_title='Tracking', page_icon=None, layout="wide")
 
 def filtrar_avaliacoes_zeradas(df):
     return df[df['reviews_rating_number'] > 0]
