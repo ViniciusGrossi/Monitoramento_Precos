@@ -13,25 +13,23 @@ df = pd.read_sql_query("SELECT * FROM mercadolivre_items", conn)
 # Fechar a conexão com o banco de dados
 conn.close()
 
+#FILTROS
 # Sidebar com filtros
 st.sidebar.header('Filtros')
-
 # Filtro por Faixa de Preço
 min_price, max_price = st.sidebar.slider('Selecione a faixa de preço', float(df['new_price'].min()), float(df['new_price'].max()), (float(df['new_price'].min()), float(df['new_price'].max())))
 df = df[(df['new_price'] >= min_price) & (df['new_price'] <= max_price)]
-
 #Filtro por Marca
 show_brands_filter = st.sidebar.checkbox('Filtrar por Marcas')
 if show_brands_filter:
     selected_brands = st.sidebar.multiselect('Selecione as marcas', df['brand'].unique(),['OLYMPIKUS','FILA', 'MIZUNO','NEW BALANCE','ASICS'])
     df = df[df['brand'].isin(selected_brands)]
-
 # Filtro por Avaliação
 min_rating, max_rating = st.sidebar.slider('Selecione a faixa de avaliações', float(df['reviews_rating_number'].min() > 0), float(df['reviews_rating_number'].max()), (float(df['reviews_rating_number'].min()), float(df['reviews_rating_number'].max())))
 df = df[(df['reviews_rating_number'] >= min_rating) & (df['reviews_rating_number'] <= max_rating)]
 
-st.title('Pesquisa de Mercado - Tênis Esportivos no Mercado Livre')
 
+st.title('Pesquisa de Mercado - Tênis Esportivos no Mercado Livre')
 # Melhorar o layout com colunas para KPIs
 st.subheader("KPIs Principais")
 col1, col2, col3 = st.columns(3)
@@ -70,10 +68,11 @@ with tab1:
     st.write(df['new_price'].describe())
 
     # Correlação entre Preço e Avaliações
+    df_non_zero_reviews = df[df['reviews_rating_number'] > 0]
     st.subheader('Correlação entre Preço e Avaliações')
-    correlation = df[['new_price', 'reviews_rating_number']].corr().iloc[0, 1]
+    correlation = df_non_zero_reviews[['new_price', 'reviews_rating_number']].corr().iloc[0, 1]
     st.write(f"A correlação entre preço e nota das avaliações é: {correlation:.2f}")
-    fig = px.scatter(df, x='new_price', y='reviews_rating_number', labels={'new_price':'Preço (R$)', 'reviews_rating_number':'Nota das Avaliações'})
+    fig = px.scatter(df_non_zero_reviews, x='new_price', y='reviews_rating_number', labels={'new_price':'Preço (R$)', 'reviews_rating_number':'Nota das Avaliações'})
     st.plotly_chart(fig)
 
     # Identificação de Outliers
@@ -89,7 +88,7 @@ with tab2:
     average_price_by_brand = df.groupby('brand')['new_price'].mean().sort_values(ascending=False)
     col1.bar_chart(average_price_by_brand)
     col2.write(average_price_by_brand)
-
+    
     # Quais marcas são mais encontradas até a 10ª página
     st.subheader('Marcas mais encontradas até a 10ª página')
     col1, col2 = st.columns([4, 2])
@@ -105,6 +104,13 @@ with tab2:
     col1.bar_chart(satisfaction_by_brand)
     col2.write(satisfaction_by_brand)
     
+    # Correlação entre Marcas e Avaliações
+    df_non_zero_reviews = df[df['reviews_rating_number'] > 0]
+    average_rating_by_brand = df_non_zero_reviews.groupby('brand')['reviews_rating_number'].mean()
+    correlation = average_rating_by_brand.corr(df_non_zero_reviews.groupby('brand')['new_price'].mean())
+    st.write(f"A correlação entre preço e nota das avaliações é: {correlation:.2f}")
+    fig = px.scatter(df_non_zero_reviews, x='brand', y='reviews_rating_number', labels={'brand':'Marca', 'reviews_rating_number':'Nota das Avaliações'})
+    st.plotly_chart(fig)
 with tab3:
     # Análise de Avaliações
     st.subheader('Distribuição de Avaliações')
@@ -120,3 +126,4 @@ with tab3:
     # Identificação de Outliers
     fig = px.box(df, x='reviews_rating_number', points='all', labels={'x':'Número de Avaliações'}, title='Outliers nas Avaliações')
     st.plotly_chart(fig)
+   
