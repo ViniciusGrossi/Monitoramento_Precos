@@ -4,14 +4,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 import sqlite3
 
+st.set_page_config(page_title='Mercado Livre Tracking', layout="wide")
 # Conectar ao banco de dados SQLite
 conn = sqlite3.connect('data/quotes.db')
 
 # Carregar os dados da tabela 'mercadolivre_items' em um DataFrame pandas
 df = pd.read_sql_query("SELECT * FROM mercadolivre_items", conn)
 conn.close()
-
-st.set_page_config(page_title='Tracking', page_icon=None, layout="wide")
 
 def filtrar_avaliacoes_zeradas(df):
     return df[df['reviews_rating_number'] > 0]
