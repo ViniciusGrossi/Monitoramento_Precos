@@ -1,4 +1,4 @@
-https://mercadolivre-tracked-prices.streamlit.app
+[![Open in Streamlit](https://img.shields.io/badge/Open%20in-Streamlit-red)](https://mercadolivre-tracked-prices.streamlit.app)
 # Projeto ETL Mercado Livre - Análise de Tênis Masculinos
 
 1. Problema de Negócio
