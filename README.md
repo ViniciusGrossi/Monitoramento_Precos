@@ -1,3 +1,4 @@
+https://mercadolivre-tracked-prices.streamlit.app
 # Projeto ETL Mercado Livre - Análise de Tênis Masculinos
 
 1. Problema de Negócio
